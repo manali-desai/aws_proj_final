@@ -22,7 +22,7 @@ pipeline {
                 sh '''
                   # Restart Express using pm2
                   pm2 delete express-app || true
-                  pm2 start flask_frontend/app.js --name express-app --watch
+                  pm2 start flask_frontend/server.js --name express-app --watch
                 '''
             }
         }
