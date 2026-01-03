@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/manali-desai/aws_proj_final.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('flask_frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Deploy Express App') {
+            steps {
+                sh '''
+                  # Restart Express using pm2
+                  pm2 delete express-app || true
+                  pm2 start flask_frontend/app.js --name express-app --watch
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Express Pipeline Completed Successfully!"
+        }
+        failure {
+            echo "Express Pipeline Failed!"
+        }
+    }
+}
+
